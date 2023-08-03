@@ -11,7 +11,7 @@ export default function Tenzi() {
 
         for (let i = 0; i < 10; i++) {
             diceArray.push( {
-                id: 1,
+                id: i,
                 value: Math.floor(Math.random() * 6) + 1,
                 frozen: false
             } );
@@ -26,6 +26,33 @@ export default function Tenzi() {
         }));
     }
 
+    function rollDice() {
+        setDice(prevDice => prevDice.map(dice => {
+            return dice.frozen ? dice : { ...dice, value: Math.floor(Math.random() * 6) + 1 }
+        }));}
+    
+
+    function endGame() {
+        const allFrozen = dice.filter(dice => dice.frozen).length === dice.length;
+        const firstValue = dice[0].value;
+        const allSame = dice.filter(dice => dice.value === firstValue).length === dice.length;
+    
+
+        if (allFrozen && allSame) {
+            return true;
+        }
+
+        return false;
+        }
+
+
+        function newGame() {
+            setDice(initDice());
+        }
+
+        const diceList = dice.map(dice => <Dice key={dice.id} id={dice.id} value={dice.value} frozen={dice.frozen} freezeDice={freezeDice} />)
+
+
     return (
         <section className="tenzi__container">
             <h3 className="tenzi__title">Tenzi</h3>
@@ -39,7 +66,7 @@ export default function Tenzi() {
 
             <button 
             className={ endGame() ? "tenzi__button tenzi__button--end" : "tenzi__button" }
-            onClick={enGame() ? newGame : rollDice}
+            onClick={endGame() ? newGame : rollDice}
             
             >
                 { endGame() ? "New Game" : "Re roll" }
